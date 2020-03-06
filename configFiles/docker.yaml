@@ -32,7 +32,8 @@ spec:
       - name: docker
         securityContext:
           privileged: true
-        image: "docker:18.09-dind"
+        image: "docker:stable"
+        args: ["--registry-mirror=https://pa4petrz.mirror.aliyuncs.com"]
         ports:
         - containerPort: 2375
         volumeMounts:
