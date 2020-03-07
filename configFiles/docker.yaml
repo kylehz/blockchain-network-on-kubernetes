@@ -33,9 +33,9 @@ spec:
         securityContext:
           privileged: true
         image: "docker:18.09-dind"
-        args: ["--storage-opt=dm.basesize=40G --registry-mirror=https://pa4petrz.mirror.aliyuncs.com"]
+        args: ["--registry-mirror=https://pa4petrz.mirror.aliyuncs.com"]
         ports:
         - containerPort: 2375
         volumeMounts:
-        - mountPath: /var/lib/docker
+        - mountPath: /data/docker
           name: dockervolume
