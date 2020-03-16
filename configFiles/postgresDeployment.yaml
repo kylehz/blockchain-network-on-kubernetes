@@ -1,0 +1,45 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: postgres-db
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: postgres-db
+    spec:
+      volumes:
+      - name: postgresdata
+        persistentVolumeClaim:
+          claimName: postgres-pvc
+      containers:
+      - name: postgres
+        image: postgres:10-alpine
+        env:
+        - name: TZ
+          value: "Asia/Shanghai"
+        - name: POSTGRES_DATABASE
+          value: "fabricexplorer"
+        - name: POSTGRES_USERNAME
+          value: "fabric"
+        - name: POSTGRES_PASSWORD
+          value: "password"
+        volumeMounts:
+        - mountPath: /var/lib/postgresql/data
+          name: postgresdata
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-db
+  labels:
+    run: postgres-db
+spec:
+ selector:
+   name: postgres-db
+ ports:
+  - protocol: TCP
+    port: 5432

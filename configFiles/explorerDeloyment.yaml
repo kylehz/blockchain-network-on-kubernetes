@@ -1,0 +1,47 @@
+---
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: explorer
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        name: explorer
+    spec:
+      volumes:
+        - name: sharedvolume
+          persistentVolumeClaim:
+            claimName: shared-pvc
+      containers:
+      - name: explorer
+        image: hyperledger/explorer:0.3.9.5
+        # command: ["sh" , "-c" , "/fabric/run.sh"]
+        env:
+        - name: TZ
+          value: "Asia/Shanghai"
+        - name: DATABASE_HOST
+          value: "postgres-db"
+        - name: DATABASE_USERNAME
+          value: "fabric"
+        - name: DATABASE_PASSWORD
+          value: "password"
+        volumeMounts:
+        - mountPath: /shared
+          name: sharedvolume
+      
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: explorer
+spec:
+ selector:
+   name: explorer
+ ports:
+   - name: webui
+     protocol: TCP
+     port: 8080
+
